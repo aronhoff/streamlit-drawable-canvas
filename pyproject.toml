@@ -24,8 +24,7 @@ out_dir = "streamlit_drawable_canvas/frontend"
 work_dir = "streamlit_drawable_canvas/frontend"
 commands = [
     "npm ci",
-    "export NODE_OPTIONS=--openssl-legacy-provider",
-    "npm run build",
+    "export NODE_OPTIONS=--openssl-legacy-provider && npm run build",
 ]
 artifacts = [
     "build"
