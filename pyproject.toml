@@ -1,0 +1,37 @@
+[project]
+name = "streamlit-drawable-canvas"
+version = "0.9.3"
+authors = [
+    { name = "Fanilo ANDRIANASOLO", email = "contact@andfanilo.com" }
+]
+description = "A Streamlit custom component for a free drawing canvas using Fabric.js."
+readme = "README.md"
+requires-python = ">=3.6"
+license = { text = "MIT" }
+dependencies = [
+    "Pillow",
+    "numpy",
+    "streamlit >= 0.63",
+]
+
+[project.urls]
+Homepage = "https://github.com/andfanilo/streamlit-drawable-canvas"
+Repository = "https://github.com/andfanilo/streamlit-drawable-canvas"
+Issues = "https://github.com/andfanilo/streamlit-drawable-canvas/issues"
+
+[[tool.hatch.build.hooks.build-scripts.scripts]]
+out_dir = "streamlit_drawable_canvas/frontend"
+work_dir = "streamlit_drawable_canvas/frontend"
+commands = [
+    "npm ci",
+    "export NODE_OPTIONS=--openssl-legacy-provider",
+    "npm run build",
+]
+artifacts = [
+    "build"
+]
+
+[build-system]
+requires = ["hatchling", "hatch-build-scripts"]
+build-backend = "hatchling.build"
+
