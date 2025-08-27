@@ -35,17 +35,17 @@ class CanvasResult:
         JSON string of canvas and objects.
     """
 
-    image_data: np.array = None
+    image_data: np.ndarray = None
     json_data: dict = None
 
 
-def _data_url_to_image(data_url: str) -> Image:
+def _data_url_to_image(data_url: str) -> Image.Image:
     """Convert DataURL string to the image."""
     _, _data_url = data_url.split(";base64,")
     return Image.open(io.BytesIO(base64.b64decode(_data_url)))
 
 
-def _resize_img(img: Image, new_height: int = 700, new_width: int = 700) -> Image:
+def _resize_img(img: Image.Image, new_height: int = 700, new_width: int = 700) -> Image.Image:
     """Resize the image to the provided resolution."""
     h_ratio = new_height / img.height
     w_ratio = new_width / img.width
@@ -58,7 +58,7 @@ def st_canvas(
     stroke_width: int = 20,
     stroke_color: str = "black",
     background_color: str = "",
-    background_image: Image = None,
+    background_image: Image.Image = None,
     update_streamlit: bool = True,
     height: int = 400,
     width: int = 600,
@@ -83,7 +83,7 @@ def st_canvas(
         Color of canvas background in CSS color property. Defaults to "" which is transparent.
         Overriden by background_image.
         Note: Changing background_color will reset the drawing.
-    background_image: Image
+    background_image: Image.Image
         Pillow Image to display behind canvas.
         Automatically resized to canvas dimensions.
         Being behind the canvas, it is not sent back to Streamlit on mouse event.
@@ -123,7 +123,8 @@ def st_canvas(
         background_image = _resize_img(background_image, height, width)
         # Reduce network traffic and cache when switch another configure, use streamlit in-mem filemanager to convert image to URL
         background_image_url = st_image.image_to_url(
-            background_image, width, True, "RGB", "PNG", f"drawable-canvas-bg-{md5(background_image.tobytes()).hexdigest()}-{key}" 
+            background_image, st_image.LayoutConfig(width=width), True, "RGB", "PNG",
+            f"drawable-canvas-bg-{md5(background_image.tobytes()).hexdigest()}-{key}"
         )
         base_url_path: str = st._config.get_option("server.baseUrlPath").strip("/")
         if base_url_path:
@@ -155,7 +156,7 @@ def st_canvas(
         default=None,
     )
     if component_value is None:
-        return CanvasResult
+        return CanvasResult()
 
     return CanvasResult(
         np.asarray(_data_url_to_image(component_value["data"])),
